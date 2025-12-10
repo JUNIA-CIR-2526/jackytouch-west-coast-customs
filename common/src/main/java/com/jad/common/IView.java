@@ -1,6 +1,8 @@
 package com.jad.common;
 
 public interface IView {
+    @SuppressWarnings("StatementWithEmptyBody")
+    void displayCar(ICar car);
 
-    void display(final String message);
+    void display(String message);
 }
