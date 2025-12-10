@@ -25,8 +25,23 @@ public class Controller {
     public void start() {
         this.currentCar = model.getBaseCar();
         model.addDecorator(currentCar);
+        view.displayCar(currentCar);
+
+       
+        waitForProceed();
     }
 
+    private void waitForProceed() {
+
+        while (view.isOff("Proceed")) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
     public static String loadLayer(String resourceName) {
         try (InputStream is = Controller.class.getResourceAsStream("/" + resourceName);
              BufferedReader br = new BufferedReader(new InputStreamReader(is))) {

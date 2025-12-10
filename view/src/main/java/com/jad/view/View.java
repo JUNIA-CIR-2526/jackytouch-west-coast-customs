@@ -5,7 +5,6 @@ import com.jad.common.IView;
 import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
-import java.awt.event.KeyEvent;
 
 public class View implements IView {
 
@@ -16,12 +15,10 @@ public class View implements IView {
 
     public View(TextWindow window, TextWindowSettings setting) {
         this.window = window;
-        setting.addKeyboardListener(KeyEvent.VK_SPACE, "Proceed");
-        setting.setScreenWidth(View.SCREEN_WIDTH);
     }
 
     public void display(String text) {
-        window.display(text);   // ← ici, plus de setText
+        window.display(text);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -33,13 +30,6 @@ public class View implements IView {
                 + View.addSeparatorBeforeCR(car.getNames(), " | ")
         );
 
-        while (this.window.isOff("Proceed")) {}
-        try{
-            Thread.sleep(View.WAITING_TIME);
-        }catch (InterruptedException exception){
-            Thread.currentThread().interrupt();
-        }
-        System.out.println("Space pressed !");
     }
 
     public static String addSeparatorBeforeCR(String text, String sep) {
@@ -52,5 +42,10 @@ public class View implements IView {
             sb.append(sep).append(lines[i]);
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean isOff(String action) {
+        return this.window.isOff(action);
     }
 }

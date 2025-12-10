@@ -4,10 +4,6 @@ import com.jad.common.ICar;
 import com.jad.common.IModel;
 import com.jad.common.IView;
 
-import com.jad.model.NeonDecorator;
-import com.jad.model.SpoilerDecorator;
-import com.jad.model.SportSetting;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,14 +19,15 @@ public class Model implements IModel {
     ICar baseCar = new BasicCar(baseDisplay, baseDescription, baseName);
     private IView view;
 
-    public Model() {
-        this.currentCar = lireFichier("car_base.txt");
-    }
-
     public Model(IView view) {
         this.view = view;
-        this.currentCar = lireFichier("car_base.txt");
+        String baseDisplay = lireFichier("car_base.txt");
+        String baseDescription = "Voiture de base";
+        String baseName = "Base";
+        this.baseCar = new BasicCar(baseDisplay, baseDescription, baseName);
+        this.currentCar = baseDisplay;
     }
+
 
     public void addDecorator(ICar car) {
 
