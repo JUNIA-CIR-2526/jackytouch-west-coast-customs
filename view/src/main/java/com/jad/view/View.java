@@ -1,12 +1,13 @@
 package com.jad.view;
 
 import com.jad.common.ICar;
+import com.jad.common.IView;
 import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
 import java.awt.event.KeyEvent;
 
-public class View {
+public class View implements IView {
 
     public static final int SCREEN_WIDTH = 80;
     public static final int WAITING_TIME = 150;
@@ -38,6 +39,7 @@ public class View {
         }catch (InterruptedException exception){
             Thread.currentThread().interrupt();
         }
+        System.out.println("Space pressed !");
     }
 
     public static String addSeparatorBeforeCR(String text, String sep) {

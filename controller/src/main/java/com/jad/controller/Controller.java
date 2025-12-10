@@ -1,12 +1,9 @@
 package com.jad.controller;
 
 import com.jad.common.ICar;
-import com.jad.view.View;
-import com.jad.model.NeonDecorator;
-import com.jad.model.SpoilerDecorator;
-import com.jad.model.SportSetting;
+import com.jad.common.IModel;
 
-
+import com.jad.common.IView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,30 +12,19 @@ import java.io.InputStreamReader;
 
 public class Controller {
 
-    private final View view;
+    private final IView view;
+    private final IModel model;
     private ICar currentCar;
 
-    public Controller(View view, ICar baseCar) {
+    public Controller(IView view,IModel model) {
         this.view = view;
-        this.currentCar = baseCar; // instance unique
+        this.model = model;
+        this.currentCar = model.getBaseCar();
     }
 
     public void start() {
-        view.displayCar(currentCar);
-
-        currentCar = new NeonDecorator(
-                currentCar,
-                loadLayer("neon.txt"),
-                new SportSetting()
-        );
-        view.displayCar(currentCar);
-
-        currentCar = new SpoilerDecorator(
-                currentCar,
-                loadLayer("spoiler.txt"),
-                new SportSetting()
-        );
-        view.displayCar(currentCar);
+        this.currentCar = model.getBaseCar();
+        model.addDecorator(currentCar);
     }
 
     public static String loadLayer(String resourceName) {

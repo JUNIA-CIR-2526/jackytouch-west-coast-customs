@@ -1,15 +1,60 @@
 package com.jad.model;
 
+import com.jad.common.ICar;
 import com.jad.common.IModel;
+import com.jad.common.IView;
+
+import com.jad.model.NeonDecorator;
+import com.jad.model.SpoilerDecorator;
+import com.jad.model.SportSetting;
+
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 public class Model implements IModel {
     private String currentCar;
     private int currentStrategy = 0;
 
+    String baseDisplay = ".... ASCII de la voiture ....";
+    String baseDescription = "Voiture de base";
+    String baseName = "Base";
+
+    ICar baseCar = new BasicCar(baseDisplay, baseDescription, baseName);
+    private IView view;
+
     public Model() {
         this.currentCar = lireFichier("car_base.txt");
+    }
+
+    public Model(IView view) {
+        this.view = view;
+        this.currentCar = lireFichier("car_base.txt");
+    }
+
+    public void addDecorator(ICar car) {
+
+        view.displayCar(car);
+
+        car = new NeonDecorator(
+                car,
+                lireFichier("neon.txt"),
+                new SportSetting()
+        );
+        view.displayCar(car);
+
+        car = new SpoilerDecorator(
+                car,
+                lireFichier("spoiler.txt"),
+                new SportSetting()
+        );
+        view.displayCar(car);
+    }
+
+
+    @Override
+    public ICar getBaseCar() {
+        return this.baseCar;
     }
 
     @Override
@@ -67,31 +112,18 @@ public class Model implements IModel {
         return new String(result);
     }
 
-    @Override
-    public void setDrivingStrategy(int strategy) {
-        this.currentStrategy = strategy;
-    }
-
-    @Override
-    public String executeDrive() {
-        switch (currentStrategy) {
-            case 1: return "Mode Normal: conduite équilibrée";
-            case 2: return "Mode Sport: accélération maximale";
-            case 3: return "Mode Éco: consommation minimale";
-            default: return "Aucun mode sélectionné";
-        }
-    }
-
-
 
     private String lireFichier(String nom) {
-        InputStream is = getClass().getResourceAsStream("/" + nom);
-        Scanner scanner = new Scanner(is, "UTF-8");
-        StringBuilder sb = new StringBuilder();
-        while (scanner.hasNextLine()) {
-            sb.append(scanner.nextLine()).append("\n");
+        InputStream inputStream = Model.class.getResourceAsStream("/" + nom);
+        if (inputStream == null) {
+
+            throw new RuntimeException("Fichier " + nom + " n'existe pas");
         }
-        scanner.close();
-        return sb.toString();
+        try {
+            String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            return content;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
